@@ -20,7 +20,6 @@ Structure expected by ADK:
 """
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -32,7 +31,7 @@ from google.adk.tools import FunctionTool
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from sqlmind_graph import SchemaGraph, DialectRegistry, graph_from_dsl
+from sqlmind_graph import SchemaGraph, DialectRegistry
 
 # ── State (loaded once per process) ──────────────────────────────────────────
 _graph: SchemaGraph | None = None

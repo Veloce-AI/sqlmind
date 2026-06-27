@@ -39,8 +39,8 @@ Usage:
 from __future__ import annotations
 import json
 import re
-from dataclasses import dataclass, field, asdict
-from typing import Optional, Union
+from dataclasses import dataclass, field
+from typing import Optional
 from collections import deque
 
 try:
@@ -937,7 +937,8 @@ def graph_from_ddl(ddl: str, dialect: str = "postgresql") -> SchemaGraph:
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    import argparse, sys
+    import argparse
+    import sys
 
     parser = argparse.ArgumentParser(description="SQLMind Graph Engine")
     sub = parser.add_subparsers(dest="cmd")
