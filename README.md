@@ -15,7 +15,7 @@ Stop writing SQL prompts. Start reasoning in execution order.<br/>
 SQLMind gives agents a **property graph schema**, a **7-phase generation protocol**,<br/>
 and a **5-layer validation gate** — across 10 SQL engines, in any framework.
 
-[Get Started](#quick-start) · [Docs](https://github.com/Veloce-AI/sqlmind/wiki) · [Discord](https://discord.gg/veloceai) · [Contributing](CONTRIBUTING.md)
+[Get Started](#quick-start) · [Docs](https://github.com/Veloce-AI/sqlmind/wiki) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
