@@ -154,12 +154,12 @@
 <text x="332" y="292" font-family="'Helvetica Neue',Arial,sans-serif" font-size="13" fill="#a855f7" font-weight="600">VeloceAI.in</text>
 <text x="408" y="292" font-family="'Helvetica Neue',Arial,sans-serif" font-size="13" fill="#334155"> · open source</text>
 
-<rect x="312" y="305" width="88" height="20" rx="10" fill="#1e0a38" stroke="#7c3aed" stroke-width="1"/>
-<text x="356" y="319" font-family="monospace" font-size="10" fill="#c084fc" text-anchor="middle">9 dialects</text>
-<rect x="408" y="305" width="78" height="20" rx="10" fill="#0c2a1e" stroke="#166534" stroke-width="1"/>
-<text x="447" y="319" font-family="monospace" font-size="10" fill="#4ade80" text-anchor="middle">MCP server</text>
-<rect x="494" y="305" width="68" height="20" rx="10" fill="#0c1a2e" stroke="#1d4ed8" stroke-width="1"/>
-<text x="528" y="319" font-family="monospace" font-size="10" fill="#7dd3fc" text-anchor="middle">MIT license</text>
+<rect x="312" y="305" width="78" height="20" rx="10" fill="#0c2a1e" stroke="#166534" stroke-width="1"/>
+<text x="351" y="319" font-family="monospace" font-size="10" fill="#4ade80" text-anchor="middle">MCP server</text>
+<rect x="398" y="305" width="68" height="20" rx="10" fill="#0c1a2e" stroke="#1d4ed8" stroke-width="1"/>
+<text x="432" y="319" font-family="monospace" font-size="10" fill="#7dd3fc" text-anchor="middle">MIT license</text>
+<rect x="474" y="305" width="78" height="20" rx="10" fill="#1e0a38" stroke="#7c3aed" stroke-width="1"/>
+<text x="513" y="319" font-family="monospace" font-size="10" fill="#c084fc" text-anchor="middle">open source</text>
 
 <text x="196" y="82" font-family="monospace" font-size="9" fill="#a855f7" text-anchor="middle" opacity="0.8">TABLE</text>
 <text x="284" y="174" font-family="monospace" font-size="9" fill="#38bdf8" text-anchor="start" opacity="0.8">COLUMN</text>
