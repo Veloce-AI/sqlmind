@@ -20,7 +20,7 @@ and a **5-layer validation gate** — across 10 SQL engines, in any framework.
 </div>
 
 <div align="center">
-  <img src="docs/hero_banner.svg" width="100%" alt="SQLMind hero" />
+  <img src="docs/sqlmind_hero.svg" width="100%" alt="SQLMind hero" />
 </div>
 
 
@@ -122,7 +122,7 @@ sqlmind/
 ├── SKILL.md                      ← Claude Code skill (phase-locked protocol)
 ├── CLAUDE.md                     ← Drop in project root to activate skill
 ├── docs/
-│   ├── hero_banner.svg           ← Wide hero image (1360×680) for GitHub README top
+│   ├── sqlmind_hero.svg          ← Wide hero image (1360×680) for GitHub README top
 │   └── logo.svg                  ← Standalone icon (200×200) for favicon / social preview
 ├── integrations/
 │   ├── sqlmind_google_adk.py     ← Google ADK agent

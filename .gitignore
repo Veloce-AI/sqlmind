@@ -115,9 +115,9 @@ CLAUDE_README_PROMPT.md
 README_HERO.html
 SETUP_PROMPT.md
 
-# Duplicate / source assets (hero_banner.svg and logo.svg are the canonical ones)
+# Duplicate / source assets
 docs/logo_new.svg
-docs/sqlmind_hero.svg
+docs/hero_banner.svg
 
 # ── Misc ──────────────────────────────────────────────────────────────────────
 *.bak

@@ -1,0 +1,196 @@
+<svg width="1360" height="680" viewBox="0 0 680 340" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>SQLMind hero image</title>
+<desc>SQLMind — SQL intelligence layer for LLM agents. Property graph logo on dark background. by VeloceAI.in</desc>
+<defs>
+  <radialGradient id="bg-glow" cx="50%" cy="50%" r="60%">
+    <stop offset="0%" stop-color="#1a0d2e"/>
+    <stop offset="55%" stop-color="#0d1117"/>
+    <stop offset="100%" stop-color="#060912"/>
+  </radialGradient>
+  <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#c084fc" stop-opacity="0.35"/>
+    <stop offset="60%" stop-color="#818cf8" stop-opacity="0.12"/>
+    <stop offset="100%" stop-color="#0d1117" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="node-glow-p" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#e9d5ff"/>
+    <stop offset="50%" stop-color="#a855f7"/>
+    <stop offset="100%" stop-color="#7c3aed"/>
+  </radialGradient>
+  <radialGradient id="node-glow-b" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#bae6fd"/>
+    <stop offset="50%" stop-color="#38bdf8"/>
+    <stop offset="100%" stop-color="#0284c7"/>
+  </radialGradient>
+  <radialGradient id="node-glow-g" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#bbf7d0"/>
+    <stop offset="50%" stop-color="#4ade80"/>
+    <stop offset="100%" stop-color="#16a34a"/>
+  </radialGradient>
+  <radialGradient id="node-glow-a" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#fde68a"/>
+    <stop offset="50%" stop-color="#fb923c"/>
+    <stop offset="100%" stop-color="#ea580c"/>
+  </radialGradient>
+  <linearGradient id="text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#d8b4fe"/>
+    <stop offset="40%" stop-color="#93c5fd"/>
+    <stop offset="100%" stop-color="#6ee7b7"/>
+  </linearGradient>
+  <linearGradient id="edge-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.8"/>
+  </linearGradient>
+  <linearGradient id="edge-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#4ade80" stop-opacity="0.8"/>
+  </linearGradient>
+  <linearGradient id="edge-grad-3" x1="0%" y1="100%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#4ade80" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#fb923c" stop-opacity="0.8"/>
+  </linearGradient>
+  <linearGradient id="edge-grad-4" x1="100%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#fb923c" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#a855f7" stop-opacity="0.8"/>
+  </linearGradient>
+  <filter id="bloom">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="soft-bloom">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="node-bloom">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+  </filter>
+</defs>
+
+<rect width="680" height="340" fill="url(#bg-glow)"/>
+
+<g opacity="0.06" stroke="#818cf8" stroke-width="0.5">
+  <line x1="0" y1="57" x2="680" y2="57"/>
+  <line x1="0" y1="113" x2="680" y2="113"/>
+  <line x1="0" y1="170" x2="680" y2="170"/>
+  <line x1="0" y1="227" x2="680" y2="227"/>
+  <line x1="0" y1="283" x2="680" y2="283"/>
+  <line x1="113" y1="0" x2="113" y2="340"/>
+  <line x1="227" y1="0" x2="227" y2="340"/>
+  <line x1="340" y1="0" x2="340" y2="340"/>
+  <line x1="453" y1="0" x2="453" y2="340"/>
+  <line x1="567" y1="0" x2="567" y2="340"/>
+</g>
+
+<circle cx="196" cy="170" r="130" fill="url(#core-glow)"/>
+<circle cx="196" cy="170" r="90" fill="none" stroke="#a855f7" stroke-width="0.4" stroke-dasharray="3 6" opacity="0.3"/>
+<circle cx="196" cy="170" r="60" fill="none" stroke="#38bdf8" stroke-width="0.4" stroke-dasharray="2 8" opacity="0.25"/>
+
+<g filter="url(#soft-bloom)" opacity="0.5">
+  <line x1="196" y1="107" x2="196" y2="163" stroke="#a855f7" stroke-width="2"/>
+  <line x1="196" y1="177" x2="196" y2="233" stroke="#4ade80" stroke-width="2"/>
+  <line x1="133" y1="170" x2="183" y2="170" stroke="#a855f7" stroke-width="2"/>
+  <line x1="209" y1="170" x2="259" y2="170" stroke="#38bdf8" stroke-width="2"/>
+  <line x1="154" y1="129" x2="183" y2="162" stroke="#a855f7" stroke-width="1.5"/>
+  <line x1="209" y1="162" x2="238" y2="129" stroke="#38bdf8" stroke-width="1.5"/>
+  <line x1="154" y1="211" x2="183" y2="178" stroke="#4ade80" stroke-width="1.5"/>
+  <line x1="209" y1="178" x2="238" y2="211" stroke="#fb923c" stroke-width="1.5"/>
+</g>
+
+<line x1="196" y1="107" x2="196" y2="163" stroke="url(#edge-grad-1)" stroke-width="1.2"/>
+<line x1="196" y1="177" x2="196" y2="233" stroke="url(#edge-grad-2)" stroke-width="1.2"/>
+<line x1="133" y1="170" x2="183" y2="170" stroke="url(#edge-grad-4)" stroke-width="1.2"/>
+<line x1="209" y1="170" x2="259" y2="170" stroke="url(#edge-grad-1)" stroke-width="1.2"/>
+<line x1="154" y1="129" x2="183" y2="162" stroke="url(#edge-grad-4)" stroke-width="0.9" opacity="0.9"/>
+<line x1="209" y1="162" x2="238" y2="129" stroke="url(#edge-grad-1)" stroke-width="0.9" opacity="0.9"/>
+<line x1="154" y1="211" x2="183" y2="178" stroke="url(#edge-grad-2)" stroke-width="0.9" opacity="0.9"/>
+<line x1="209" y1="178" x2="238" y2="211" stroke="url(#edge-grad-3)" stroke-width="0.9" opacity="0.9"/>
+
+<line x1="148" y1="122" x2="133" y2="105" stroke="#a855f7" stroke-width="0.7" opacity="0.5"/>
+<line x1="244" y1="122" x2="259" y2="105" stroke="#38bdf8" stroke-width="0.7" opacity="0.5"/>
+<line x1="148" y1="218" x2="133" y2="235" stroke="#4ade80" stroke-width="0.7" opacity="0.5"/>
+<line x1="244" y1="218" x2="259" y2="235" stroke="#fb923c" stroke-width="0.7" opacity="0.5"/>
+
+<circle cx="133" cy="105" r="4" fill="#a855f7" opacity="0.6"/>
+<circle cx="259" cy="105" r="4" fill="#38bdf8" opacity="0.6"/>
+<circle cx="133" cy="235" r="4" fill="#4ade80" opacity="0.6"/>
+<circle cx="259" cy="235" r="4" fill="#fb923c" opacity="0.6"/>
+
+<g filter="url(#node-bloom)" opacity="0.6">
+  <circle cx="196" cy="100" r="14" fill="#a855f7"/>
+  <circle cx="266" cy="170" r="14" fill="#38bdf8"/>
+  <circle cx="196" cy="240" r="14" fill="#4ade80"/>
+  <circle cx="126" cy="170" r="14" fill="#fb923c"/>
+  <circle cx="148" cy="122" r="10" fill="#c084fc"/>
+  <circle cx="244" cy="122" r="10" fill="#7dd3fc"/>
+  <circle cx="148" cy="218" r="10" fill="#86efac"/>
+  <circle cx="244" cy="218" r="10" fill="#fdba74"/>
+  <circle cx="196" cy="170" r="16" fill="#8b5cf6"/>
+</g>
+
+<circle cx="196" cy="100" r="11" fill="url(#node-glow-p)"/>
+<circle cx="266" cy="170" r="11" fill="url(#node-glow-b)"/>
+<circle cx="196" cy="240" r="11" fill="url(#node-glow-g)"/>
+<circle cx="126" cy="170" r="11" fill="url(#node-glow-a)"/>
+<circle cx="148" cy="122" r="7" fill="url(#node-glow-p)"/>
+<circle cx="244" cy="122" r="7" fill="url(#node-glow-b)"/>
+<circle cx="148" cy="218" r="7" fill="url(#node-glow-g)"/>
+<circle cx="244" cy="218" r="7" fill="url(#node-glow-a)"/>
+
+<circle cx="196" cy="170" r="13" fill="url(#node-glow-p)" opacity="0.3"/>
+<circle cx="196" cy="170" r="10" fill="none" stroke="#d8b4fe" stroke-width="1.5"/>
+<circle cx="196" cy="170" r="5" fill="#c084fc"/>
+
+<g filter="url(#bloom)" opacity="0.4">
+  <text x="310" y="158" font-family="'Helvetica Neue',Arial,sans-serif" font-size="72" font-weight="900" fill="#c084fc" letter-spacing="-3">SQL</text>
+  <text x="310" y="230" font-family="'Helvetica Neue',Arial,sans-serif" font-size="72" font-weight="900" fill="#4ade80" letter-spacing="-3">Mind</text>
+</g>
+<text x="310" y="158" font-family="'Helvetica Neue',Arial,sans-serif" font-size="72" font-weight="900" fill="url(#text-grad)" letter-spacing="-3">SQL</text>
+<text x="310" y="230" font-family="'Helvetica Neue',Arial,sans-serif" font-size="72" font-weight="900" fill="url(#text-grad)" letter-spacing="-3">Mind</text>
+
+<text x="312" y="258" font-family="'Helvetica Neue',Arial,sans-serif" font-size="15" fill="#94a3b8" letter-spacing="0.5">SQL intelligence layer for LLM agents</text>
+<line x1="312" y1="272" x2="658" y2="272" stroke="#1e293b" stroke-width="1"/>
+<text x="312" y="292" font-family="'Helvetica Neue',Arial,sans-serif" font-size="13" fill="#475569">by </text>
+<text x="332" y="292" font-family="'Helvetica Neue',Arial,sans-serif" font-size="13" fill="#a855f7" font-weight="600">VeloceAI.in</text>
+<text x="408" y="292" font-family="'Helvetica Neue',Arial,sans-serif" font-size="13" fill="#334155"> · open source</text>
+
+<rect x="312" y="305" width="88" height="20" rx="10" fill="#1e0a38" stroke="#7c3aed" stroke-width="1"/>
+<text x="356" y="319" font-family="monospace" font-size="10" fill="#c084fc" text-anchor="middle">9 dialects</text>
+<rect x="408" y="305" width="78" height="20" rx="10" fill="#0c2a1e" stroke="#166534" stroke-width="1"/>
+<text x="447" y="319" font-family="monospace" font-size="10" fill="#4ade80" text-anchor="middle">MCP server</text>
+<rect x="494" y="305" width="68" height="20" rx="10" fill="#0c1a2e" stroke="#1d4ed8" stroke-width="1"/>
+<text x="528" y="319" font-family="monospace" font-size="10" fill="#7dd3fc" text-anchor="middle">MIT license</text>
+
+<text x="196" y="82" font-family="monospace" font-size="9" fill="#a855f7" text-anchor="middle" opacity="0.8">TABLE</text>
+<text x="284" y="174" font-family="monospace" font-size="9" fill="#38bdf8" text-anchor="start" opacity="0.8">COLUMN</text>
+<text x="196" y="262" font-family="monospace" font-size="9" fill="#4ade80" text-anchor="middle" opacity="0.8">TABLE</text>
+<text x="108" y="174" font-family="monospace" font-size="9" fill="#fb923c" text-anchor="end" opacity="0.8">FK EDGE</text>
+
+<g opacity="0.7">
+  <circle cx="42" cy="28" r="1.2" fill="#818cf8"/>
+  <circle cx="78" cy="54" r="0.8" fill="#c084fc"/>
+  <circle cx="22" cy="88" r="1" fill="#38bdf8"/>
+  <circle cx="55" cy="118" r="0.6" fill="#a855f7"/>
+  <circle cx="88" cy="68" r="1.4" fill="#4ade80"/>
+  <circle cx="640" cy="32" r="1.2" fill="#38bdf8"/>
+  <circle cx="612" cy="62" r="0.8" fill="#c084fc"/>
+  <circle cx="658" cy="88" r="1" fill="#818cf8"/>
+  <circle cx="628" cy="118" r="1.4" fill="#4ade80"/>
+  <circle cx="595" cy="44" r="0.7" fill="#fb923c"/>
+  <circle cx="42" cy="300" r="1" fill="#4ade80"/>
+  <circle cx="68" cy="280" r="0.8" fill="#c084fc"/>
+  <circle cx="25" cy="268" r="1.2" fill="#38bdf8"/>
+  <circle cx="620" cy="300" r="1" fill="#a855f7"/>
+  <circle cx="648" cy="274" r="0.8" fill="#4ade80"/>
+  <circle cx="598" cy="318" r="1.2" fill="#38bdf8"/>
+  <circle cx="340" cy="18" r="1" fill="#c084fc"/>
+  <circle cx="420" cy="12" r="0.8" fill="#4ade80"/>
+  <circle cx="260" cy="22" r="1.1" fill="#38bdf8"/>
+  <circle cx="500" cy="15" r="0.9" fill="#a855f7"/>
+</g>
+
+<path d="M0 0 L28 0 L28 4 M0 0 L0 28 L4 28" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+<path d="M680 0 L652 0 L652 4 M680 0 L680 28 L676 28" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.4"/>
+<path d="M0 340 L28 340 L28 336 M0 340 L0 312 L4 312" fill="none" stroke="#4ade80" stroke-width="1" opacity="0.4"/>
+<path d="M680 340 L652 340 L652 336 M680 340 L680 312 L676 312" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.4"/>
+</svg>
