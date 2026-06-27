@@ -1,0 +1,91 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<title>SQLMind logo</title>
+<defs>
+  <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#2d1458"/>
+    <stop offset="100%" stop-color="#0d0a1a"/>
+  </radialGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#c084fc" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#0d0a1a" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="np" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#e9d5ff"/>
+    <stop offset="50%" stop-color="#a855f7"/>
+    <stop offset="100%" stop-color="#7c3aed"/>
+  </radialGradient>
+  <radialGradient id="nb" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#bae6fd"/>
+    <stop offset="50%" stop-color="#38bdf8"/>
+    <stop offset="100%" stop-color="#0284c7"/>
+  </radialGradient>
+  <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#bbf7d0"/>
+    <stop offset="50%" stop-color="#4ade80"/>
+    <stop offset="100%" stop-color="#16a34a"/>
+  </radialGradient>
+  <radialGradient id="na" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#fde68a"/>
+    <stop offset="50%" stop-color="#fb923c"/>
+    <stop offset="100%" stop-color="#ea580c"/>
+  </radialGradient>
+  <filter id="gf">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+    <feComposite in="SourceGraphic" in2="b" operator="over"/>
+  </filter>
+</defs>
+
+<rect width="200" height="200" rx="44" fill="url(#bg)"/>
+<circle cx="100" cy="100" r="80" fill="url(#glow)"/>
+<circle cx="100" cy="100" r="58" fill="none" stroke="#a855f7" stroke-width="0.6" stroke-dasharray="4 8" opacity="0.35"/>
+
+<!-- glow blooms -->
+<g filter="url(#gf)" opacity="0.55">
+  <circle cx="100" cy="52" r="18" fill="#a855f7"/>
+  <circle cx="148" cy="100" r="18" fill="#38bdf8"/>
+  <circle cx="100" cy="148" r="18" fill="#4ade80"/>
+  <circle cx="52" cy="100" r="18" fill="#fb923c"/>
+  <circle cx="100" cy="100" r="14" fill="#8b5cf6"/>
+</g>
+
+<!-- edges -->
+<line x1="100" y1="65" x2="100" y2="89" stroke="#a855f7" stroke-width="2" opacity="0.9"/>
+<line x1="100" y1="111" x2="100" y2="135" stroke="#4ade80" stroke-width="2" opacity="0.9"/>
+<line x1="65" y1="100" x2="89" y2="100" stroke="#fb923c" stroke-width="2" opacity="0.9"/>
+<line x1="111" y1="100" x2="135" y2="100" stroke="#38bdf8" stroke-width="2" opacity="0.9"/>
+<!-- diagonal edges -->
+<line x1="72" y1="72" x2="88" y2="88" stroke="#c084fc" stroke-width="1.2" opacity="0.7"/>
+<line x1="128" y1="72" x2="112" y2="88" stroke="#7dd3fc" stroke-width="1.2" opacity="0.7"/>
+<line x1="72" y1="128" x2="88" y2="112" stroke="#86efac" stroke-width="1.2" opacity="0.7"/>
+<line x1="128" y1="128" x2="112" y2="112" stroke="#fdba74" stroke-width="1.2" opacity="0.7"/>
+
+<!-- outer nodes -->
+<circle cx="100" cy="52" r="14" fill="url(#np)"/>
+<circle cx="148" cy="100" r="14" fill="url(#nb)"/>
+<circle cx="100" cy="148" r="14" fill="url(#ng)"/>
+<circle cx="52" cy="100" r="14" fill="url(#na)"/>
+
+<!-- diagonal mini-nodes -->
+<circle cx="68" cy="68" r="8" fill="url(#np)" opacity="0.85"/>
+<circle cx="132" cy="68" r="8" fill="url(#nb)" opacity="0.85"/>
+<circle cx="68" cy="132" r="8" fill="url(#ng)" opacity="0.85"/>
+<circle cx="132" cy="132" r="8" fill="url(#na)" opacity="0.85"/>
+
+<!-- center -->
+<circle cx="100" cy="100" r="14" fill="#8b5cf6" opacity="0.3"/>
+<circle cx="100" cy="100" r="11" fill="none" stroke="#d8b4fe" stroke-width="2"/>
+<circle cx="100" cy="100" r="5.5" fill="#c084fc"/>
+
+<!-- SQL label inside center -->
+<text x="100" y="104" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-size="7" font-weight="900" fill="#f0abfc" letter-spacing="0.5">SQL</text>
+
+<!-- star particles -->
+<circle cx="24" cy="24" r="1.5" fill="#818cf8" opacity="0.8"/>
+<circle cx="176" cy="24" r="1.5" fill="#38bdf8" opacity="0.8"/>
+<circle cx="24" cy="176" r="1.5" fill="#4ade80" opacity="0.8"/>
+<circle cx="176" cy="176" r="1.5" fill="#fb923c" opacity="0.8"/>
+<circle cx="100" cy="14" r="1.2" fill="#c084fc" opacity="0.7"/>
+<circle cx="186" cy="100" r="1.2" fill="#38bdf8" opacity="0.7"/>
+<circle cx="14" cy="100" r="1.2" fill="#a855f7" opacity="0.7"/>
+<circle cx="100" cy="186" r="1.2" fill="#4ade80" opacity="0.7"/>
+</svg>

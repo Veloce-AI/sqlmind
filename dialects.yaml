@@ -1,0 +1,571 @@
+# SQLMind Dialect Registry
+# ─────────────────────────────────────────────────────────────────────────────
+# This file is USER-EDITABLE. Add custom functions, override defaults,
+# define house-style patterns, or add entirely new dialects.
+#
+# Structure per dialect:
+#   id:              internal key used in code / CLI / MCP tools
+#   name:            display name
+#   aliases:         alternative names users might type
+#   identifiers:     how to quote reserved words / mixed-case names
+#   limit:           syntax template for limiting rows (%n = row count, %o = offset)
+#   top:             alternative to limit (SQL Server / Sybase style)
+#   date_now:        expression for current timestamp
+#   date_trunc:      template for truncating a date (%col = column, %part = granularity)
+#   date_add:        template for adding an interval (%col, %n, %unit)
+#   date_diff:       template for date difference
+#   cast:            type cast template (%col, %type)
+#   string_agg:      aggregate strings (%col, %sep)
+#   regex_match:     regex match expression (%col, %pattern)
+#   ilike:           case-insensitive LIKE (true/false — if false, use LOWER())
+#   qualify_clause:  supports QUALIFY for window filter (true/false)
+#   lateral_join:    supports LATERAL or CROSS APPLY joins
+#   array_fns:       list of supported array function names
+#   window_support:  true/false — supports window functions
+#   cte_support:     true/false — supports WITH (CTE)
+#   except_syntax:   EXCEPT or MINUS
+#   schema_query:    SQL to list all tables (for live introspection)
+#   column_query:    SQL to list columns for a table (%table placeholder)
+#   explain_prefix:  how to prefix EXPLAIN
+#   notes:           free-text gotchas for the LLM to be aware of
+#   custom_fns:      user-defined shorthand functions (name → expansion template)
+# ─────────────────────────────────────────────────────────────────────────────
+
+dialects:
+
+  # ── 1. PostgreSQL ───────────────────────────────────────────────────────────
+  - id: postgresql
+    name: PostgreSQL
+    aliases: [postgres, pg, psql]
+    identifiers:
+      quote_char: '"'
+      case_sensitive: true
+      example: '"MyTable"."MyColumn"'
+    limit:
+      syntax: "LIMIT %n OFFSET %o"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "NOW()"
+    date_trunc: "DATE_TRUNC('%part', %col)"
+    date_add: "%col + INTERVAL '%n %unit'"
+    date_diff: "EXTRACT(EPOCH FROM (%col2 - %col1))"
+    cast: "%col::%type"
+    string_agg: "STRING_AGG(%col, '%sep')"
+    array_agg: "ARRAY_AGG(%col)"
+    regex_match: "%col ~ '%pattern'"
+    ilike: true
+    qualify_clause: false
+    lateral_join: "LATERAL"
+    array_fns: [ARRAY_AGG, ARRAY_LENGTH, UNNEST, ARRAY_APPEND]
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+      ORDER BY table_name
+    column_query: |
+      SELECT column_name, data_type, is_nullable,
+             column_default, character_maximum_length
+      FROM information_schema.columns
+      WHERE table_name = '%table' AND table_schema = 'public'
+      ORDER BY ordinal_position
+    explain_prefix: "EXPLAIN (ANALYZE false, FORMAT JSON)"
+    notes: |
+      - Use ILIKE for case-insensitive matching (not LIKE)
+      - Cast with :: shorthand: col::INTEGER not CAST(col AS INTEGER)
+      - SERIAL / BIGSERIAL for auto-increment (or GENERATED ALWAYS AS IDENTITY)
+      - Use RETURNING clause after INSERT/UPDATE/DELETE
+      - DISTINCT ON (col) for first-per-group without subquery
+      - nullif(), coalesce() preferred over CASE for null handling
+      - For JSON: col->>'key' (text) vs col->'key' (jsonb); use @> for containment
+      - generate_series() for range generation
+    custom_fns: {}
+
+  # ── 2. MySQL / MariaDB ──────────────────────────────────────────────────────
+  - id: mysql
+    name: MySQL
+    aliases: [mariadb, mysql8, mysql5]
+    identifiers:
+      quote_char: '`'
+      case_sensitive: false
+      example: '`my_table`.`my_column`'
+    limit:
+      syntax: "LIMIT %n OFFSET %o"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "NOW()"
+    date_trunc: "DATE_FORMAT(%col, '%Y-%m-01')"   # approximate — MySQL has no DATE_TRUNC
+    date_add: "DATE_ADD(%col, INTERVAL %n %unit)"
+    date_diff: "DATEDIFF(%col2, %col1)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "GROUP_CONCAT(%col SEPARATOR '%sep')"
+    array_agg: ~   # not supported natively — use GROUP_CONCAT
+    regex_match: "%col REGEXP '%pattern'"
+    ilike: false   # use LOWER(%col) LIKE LOWER('%val') instead
+    qualify_clause: false
+    lateral_join: "LATERAL"    # MySQL 8.0.14+
+    array_fns: []
+    window_support: true       # MySQL 8.0+
+    cte_support: true          # MySQL 8.0+
+    except_syntax: EXCEPT
+    schema_query: |
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = DATABASE() AND table_type = 'BASE TABLE'
+      ORDER BY table_name
+    column_query: |
+      SELECT column_name, data_type, is_nullable, column_default
+      FROM information_schema.columns
+      WHERE table_name = '%table' AND table_schema = DATABASE()
+      ORDER BY ordinal_position
+    explain_prefix: "EXPLAIN FORMAT=JSON"
+    notes: |
+      - Backtick all identifiers that are reserved words
+      - No STRING_AGG — use GROUP_CONCAT(col SEPARATOR ',')
+      - No ILIKE — use LOWER() or COLLATE utf8_general_ci
+      - DATE_FORMAT for date truncation (no DATE_TRUNC function)
+      - LIMIT and OFFSET are separate clauses (not combined like PostgreSQL)
+      - AUTO_INCREMENT for primary keys, not SERIAL
+      - Strict mode (sql_mode) affects NULL handling and division by zero
+      - Check MySQL version: windows functions, CTEs require 8.0+
+      - Use IFNULL instead of NUL (COALESCE also works)
+    custom_fns: {}
+
+  # ── 3. SQLite ───────────────────────────────────────────────────────────────
+  - id: sqlite
+    name: SQLite
+    aliases: [sqlite3]
+    identifiers:
+      quote_char: '"'
+      case_sensitive: false
+      example: '"my_table"."my_column"'
+    limit:
+      syntax: "LIMIT %n OFFSET %o"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "datetime('now')"
+    date_trunc: "strftime('%Y-%m-01', %col)"
+    date_add: "datetime(%col, '+%n %unit')"
+    date_diff: "CAST((julianday(%col2) - julianday(%col1)) AS INTEGER)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "GROUP_CONCAT(%col, '%sep')"
+    array_agg: ~
+    regex_match: "%col REGEXP '%pattern'"  # requires SQLite regex extension
+    ilike: false   # use LIKE (SQLite LIKE is case-insensitive for ASCII by default)
+    qualify_clause: false
+    lateral_join: false
+    array_fns: []
+    window_support: true   # SQLite 3.25.0+ (2018)
+    cte_support: true      # SQLite 3.8.3+ (2014)
+    except_syntax: EXCEPT
+    schema_query: |
+      SELECT name FROM sqlite_master
+      WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
+      ORDER BY name
+    column_query: |
+      PRAGMA table_info('%table')
+    explain_prefix: "EXPLAIN QUERY PLAN"
+    notes: |
+      - NO RIGHT JOIN — use LEFT JOIN with tables reversed
+      - NO FULL OUTER JOIN — simulate with UNION of two LEFT JOINs
+      - Dynamic typing: SQLite coerces types at runtime — declare types for clarity
+      - strftime() for all date operations (no DATE_TRUNC, DATE_ADD functions)
+      - GROUP BY is permissive: non-aggregated columns not in GROUP BY are allowed
+        (picks an arbitrary row value) — always be explicit
+      - REGEXP requires loading a SQLite extension (not available by default)
+      - No ALTER TABLE DROP COLUMN in older versions — recreate table workaround
+      - rowid is an implicit PK for all tables unless WITHOUT ROWID
+      - VACUUM to reclaim space; WAL mode for better concurrency
+    custom_fns: {}
+
+  # ── 4. SQL Server (T-SQL) ────────────────────────────────────────────────────
+  - id: mssql
+    name: SQL Server (T-SQL)
+    aliases: [tsql, sqlserver, sql_server, azure_sql]
+    identifiers:
+      quote_char: '[]'   # or double-quote with QUOTED_IDENTIFIER ON
+      case_sensitive: false
+      example: '[MyTable].[MyColumn]'
+    limit:
+      syntax: "OFFSET %o ROWS FETCH NEXT %n ROWS ONLY"
+      no_offset: "OFFSET 0 ROWS FETCH NEXT %n ROWS ONLY"
+    top:
+      syntax: "TOP (%n)"
+      note: "TOP goes after SELECT: SELECT TOP (10) col FROM ..."
+    date_now: "GETDATE()"
+    date_trunc: "DATEADD(%part, DATEDIFF(%part, 0, %col), 0)"
+    date_add: "DATEADD(%unit, %n, %col)"
+    date_diff: "DATEDIFF(%unit, %col1, %col2)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "STRING_AGG(%col, '%sep')"    # SQL Server 2017+
+    array_agg: ~   # not supported
+    regex_match: ~   # no native REGEXP; use LIKE or CLR
+    ilike: false    # case sensitivity depends on collation; usually case-insensitive
+    qualify_clause: false
+    lateral_join: "CROSS APPLY"   # also OUTER APPLY (like LEFT LATERAL)
+    array_fns: []
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_TYPE = 'BASE TABLE'
+      ORDER BY TABLE_NAME
+    column_query: |
+      SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_NAME = '%table'
+      ORDER BY ORDINAL_POSITION
+    explain_prefix: "SET SHOWPLAN_ALL ON;"
+    notes: |
+      - Use TOP (n) not LIMIT for simple row caps
+      - Use OFFSET/FETCH for pagination (SQL 2012+)
+      - GETDATE() not NOW() for current timestamp
+      - GETUTCDATE() for UTC, SYSDATETIME() for high precision
+      - Square brackets [Column Name] for reserved words / spaces
+      - No ILIKE — collation controls case sensitivity; usually case-insensitive by default
+      - CROSS APPLY is LEFT LATERAL equivalent; OUTER APPLY is OUTER LATERAL
+      - STRING_AGG requires SQL Server 2017+ — use FOR XML PATH for older versions
+      - NOLOCK hint (WITH(NOLOCK)) for dirty reads in reporting queries
+      - ISNULL(col, default) works like COALESCE but only two args
+      - No automatic boolean type — use BIT (0/1)
+      - TRY_CAST / TRY_CONVERT for safe casting without errors
+    custom_fns: {}
+
+  # ── 5. Google BigQuery ──────────────────────────────────────────────────────
+  - id: bigquery
+    name: Google BigQuery
+    aliases: [bq, bigquery_standard]
+    identifiers:
+      quote_char: '`'
+      case_sensitive: false
+      example: '`project.dataset.table`'
+    limit:
+      syntax: "LIMIT %n"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "CURRENT_TIMESTAMP()"
+    date_trunc: "DATE_TRUNC(%col, %part)"
+    date_add: "DATE_ADD(%col, INTERVAL %n %unit)"
+    date_diff: "DATE_DIFF(%col2, %col1, %unit)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "STRING_AGG(%col, '%sep')"
+    array_agg: "ARRAY_AGG(%col)"
+    regex_match: "REGEXP_CONTAINS(%col, r'%pattern')"
+    ilike: false   # use LOWER() + LIKE or REGEXP_CONTAINS with case-insensitive flag
+    qualify_clause: true    # BigQuery supports QUALIFY for window function filtering
+    lateral_join: "CROSS JOIN UNNEST(%array) AS alias"
+    array_fns: [ARRAY_AGG, ARRAY_LENGTH, ARRAY_TO_STRING, UNNEST, ARRAY, ARRAY_CONCAT]
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT DISTINCT   # BigQuery uses EXCEPT DISTINCT
+    schema_query: |
+      SELECT table_name FROM `project.dataset`.INFORMATION_SCHEMA.TABLES
+      WHERE table_type = 'BASE TABLE'
+    column_query: |
+      SELECT column_name, data_type, is_nullable
+      FROM `project.dataset`.INFORMATION_SCHEMA.COLUMNS
+      WHERE table_name = '%table'
+    explain_prefix: ~   # Use BigQuery console or bq query --dry_run
+    notes: |
+      - Backtick table names: `project.dataset.table`
+      - QUALIFY filters window function results: SELECT *, ROW_NUMBER() OVER(...) AS rn QUALIFY rn = 1
+      - ARRAY_AGG and UNNEST for array operations
+      - STRUCT type for nested records
+      - DATE, DATETIME, TIMESTAMP are distinct types — use explicitly
+      - REGEXP_CONTAINS uses RE2 syntax (not POSIX REGEXP)
+      - EXCEPT DISTINCT not just EXCEPT
+      - No ILIKE — use LOWER() or REGEXP_CONTAINS(col, r'(?i)pattern')
+      - Partitioned tables: WHERE partition_col matters for cost control
+      - Use APPROX_COUNT_DISTINCT for large-scale counting
+      - GENERATE_ARRAY for integer sequences
+      - SAFE_DIVIDE to avoid zero-division errors
+      - TABLESAMPLE for random sampling
+    custom_fns: {}
+
+  # ── 6. Snowflake ─────────────────────────────────────────────────────────────
+  - id: snowflake
+    name: Snowflake
+    aliases: [snowflake_sql]
+    identifiers:
+      quote_char: '"'
+      case_sensitive: false     # identifiers are UPPER-cased by default
+      example: '"MY_TABLE"."MY_COLUMN"'
+    limit:
+      syntax: "LIMIT %n"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "CURRENT_TIMESTAMP()"
+    date_trunc: "DATE_TRUNC('%part', %col)"
+    date_add: "DATEADD(%unit, %n, %col)"
+    date_diff: "DATEDIFF(%unit, %col1, %col2)"
+    cast: "TRY_CAST(%col AS %type)"   # TRY_CAST safer than CAST
+    string_agg: "LISTAGG(%col, '%sep') WITHIN GROUP (ORDER BY %col)"
+    array_agg: "ARRAY_AGG(%col)"
+    regex_match: "REGEXP_LIKE(%col, '%pattern')"
+    ilike: true     # Snowflake has native ILIKE
+    qualify_clause: true    # Snowflake supports QUALIFY
+    lateral_join: "LATERAL FLATTEN(INPUT => %col)"
+    array_fns: [ARRAY_AGG, ARRAY_SIZE, ARRAY_TO_STRING, FLATTEN, ARRAY_CAT, ARRAYS_OVERLAP]
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SHOW TABLES IN DATABASE your_db;
+      -- or:
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = CURRENT_SCHEMA()
+    column_query: |
+      SELECT column_name, data_type, is_nullable, column_default
+      FROM information_schema.columns
+      WHERE table_name = '%table' AND table_schema = CURRENT_SCHEMA()
+    explain_prefix: "EXPLAIN USING TABULAR"
+    notes: |
+      - QUALIFY instead of subquery for filtering window function results
+      - ILIKE works natively (case-insensitive LIKE)
+      - Identifiers UPPER-cased by default; use double-quotes to preserve case
+      - LATERAL FLATTEN for semi-structured / array data
+      - LISTAGG for string aggregation (not STRING_AGG)
+      - TRY_CAST instead of CAST to avoid errors on bad data
+      - SAMPLE (n ROWS) or SAMPLE (n PERCENT) for random sampling
+      - TIME_SLICE for time bucket aggregation
+      - GENERATOR() for generating synthetic row sets
+      - Use STREAMS and TASKS for CDC workflows (not pure SQL)
+      - ZERO_COPY_CLONE for instant table cloning
+      - Result caching: identical queries reuse cached results within 24h
+    custom_fns: {}
+
+  # ── 7. Amazon Redshift ───────────────────────────────────────────────────────
+  - id: redshift
+    name: Amazon Redshift
+    aliases: [aws_redshift, redshift_sql]
+    identifiers:
+      quote_char: '"'
+      case_sensitive: false
+      example: '"my_schema"."my_table"'
+    limit:
+      syntax: "LIMIT %n OFFSET %o"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "GETDATE()"
+    date_trunc: "DATE_TRUNC('%part', %col)"
+    date_add: "DATEADD(%unit, %n, %col)"
+    date_diff: "DATEDIFF(%unit, %col1, %col2)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "LISTAGG(%col, '%sep') WITHIN GROUP (ORDER BY %col)"
+    array_agg: ~    # Redshift has limited array support
+    regex_match: "REGEXP_INSTR(%col, '%pattern') > 0"
+    ilike: true   # Redshift supports ILIKE
+    qualify_clause: false
+    lateral_join: false   # limited lateral support
+    array_fns: []
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SELECT tablename FROM pg_catalog.pg_tables
+      WHERE schemaname = 'public'
+      ORDER BY tablename
+    column_query: |
+      SELECT column_name, data_type, is_nullable
+      FROM information_schema.columns
+      WHERE table_name = '%table' AND table_schema = 'public'
+      ORDER BY ordinal_position
+    explain_prefix: "EXPLAIN"
+    notes: |
+      - PostgreSQL-derived but NOT identical — many PG functions missing
+      - ILIKE works natively
+      - LISTAGG for string aggregation (not STRING_AGG)
+      - No native array type — use SUPER for semi-structured data (Redshift 1.0.7890+)
+      - DISTKEY and SORTKEY matter for performance — consider them in large queries
+      - GETDATE() for current timestamp (not NOW())
+      - DATE_TRUNC works like PostgreSQL
+      - Avoid DISTINCT on large result sets — expensive in MPP architecture
+      - Use APPROXIMATE PERCENTILE_DISC for large-scale percentile estimation
+      - Leader node vs compute node: some functions only on leader node
+      - Unload data with UNLOAD command, not COPY
+      - VACUUM and ANALYZE for maintenance
+    custom_fns: {}
+
+  # ── 8. Databricks SQL (Delta Lake) ───────────────────────────────────────────
+  - id: databricks
+    name: Databricks SQL
+    aliases: [delta_lake, databricks_sql, delta]
+    identifiers:
+      quote_char: '`'
+      case_sensitive: false
+      example: '`catalog`.`schema`.`table`'
+    limit:
+      syntax: "LIMIT %n"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "CURRENT_TIMESTAMP()"
+    date_trunc: "DATE_TRUNC('%part', %col)"
+    date_add: "DATEADD(%unit, %n, %col)"
+    date_diff: "DATEDIFF(%unit, %col1, %col2)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "COLLECT_LIST(%col)"   # returns array; use ARRAY_JOIN to stringify
+    array_agg: "COLLECT_LIST(%col)"
+    regex_match: "RLIKE('%pattern', %col)"
+    ilike: false    # use LOWER() or RLIKE with (?i)
+    qualify_clause: false
+    lateral_join: "LATERAL VIEW EXPLODE(%col) AS alias"
+    array_fns: [COLLECT_LIST, COLLECT_SET, EXPLODE, ARRAY_JOIN, ARRAY_CONTAINS, SIZE, FLATTEN, SORT_ARRAY]
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SHOW TABLES IN catalog.schema_name;
+      -- or:
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = 'schema_name'
+    column_query: |
+      DESCRIBE TABLE %table
+    explain_prefix: "EXPLAIN EXTENDED"
+    notes: |
+      - Three-level namespace: catalog.schema.table (Unity Catalog)
+      - COLLECT_LIST for array aggregation; wrap with ARRAY_JOIN for strings
+      - LATERAL VIEW EXPLODE for array flattening (or EXPLODE() with CROSS JOIN LATERAL)
+      - RLIKE for regex (not REGEXP); supports POSIX regex
+      - Time travel: SELECT * FROM table TIMESTAMP AS OF '2024-01-01'
+      - Delta Lake merge: MERGE INTO target USING source ON ... WHEN MATCHED ...
+      - Z-ORDER clustering for multi-dimensional data skipping
+      - OPTIMIZE command for compaction
+      - GENERATED ALWAYS AS for computed columns
+      - No QUALIFY — use subquery or CTE with ROW_NUMBER filter
+      - Photon engine: columnar; avoid row-by-row UDFs for large data
+    custom_fns: {}
+
+  # ── 9. Oracle Database ──────────────────────────────────────────────────────
+  - id: oracle
+    name: Oracle Database
+    aliases: [oracle_sql, plsql, oracle_db]
+    identifiers:
+      quote_char: '"'
+      case_sensitive: true     # unquoted identifiers are UPPER-cased
+      example: '"MY_SCHEMA"."MY_TABLE"'
+    limit:
+      syntax: "FETCH FIRST %n ROWS ONLY"
+      no_offset: "FETCH FIRST %n ROWS ONLY"
+    top: ~
+    date_now: "SYSDATE"
+    date_trunc: "TRUNC(%col, '%part')"         # e.g. TRUNC(col, 'MM') for month
+    date_add: "%col + INTERVAL '%n' %unit"     # or DATE + number (days)
+    date_diff: "(%col2 - %col1)"               # returns days as NUMBER
+    cast: "CAST(%col AS %type)"
+    string_agg: "LISTAGG(%col, '%sep') WITHIN GROUP (ORDER BY %col)"
+    array_agg: ~    # no native array agg; use COLLECT() with nested table types
+    regex_match: "REGEXP_LIKE(%col, '%pattern')"
+    ilike: false    # use UPPER(%col) LIKE UPPER('%val') or REGEXP_LIKE with 'i' flag
+    qualify_clause: false
+    lateral_join: "CROSS JOIN LATERAL"    # Oracle 12c+
+    array_fns: []
+    window_support: true
+    cte_support: true
+    except_syntax: MINUS    # Oracle uses MINUS, not EXCEPT
+    schema_query: |
+      SELECT table_name FROM user_tables ORDER BY table_name
+    column_query: |
+      SELECT column_name, data_type, nullable, data_default
+      FROM user_tab_columns
+      WHERE table_name = UPPER('%table')
+      ORDER BY column_id
+    explain_prefix: "EXPLAIN PLAN FOR"
+    notes: |
+      - ROWNUM for legacy row limiting (pre-12c): WHERE ROWNUM <= 10
+        Prefer FETCH FIRST n ROWS ONLY (12c+) for clarity
+      - SYSDATE for current date+time; SYSTIMESTAMP for high-precision timestamp
+      - TRUNC(col, 'MM') truncates to first day of month; TRUNC(col) truncates to midnight
+      - NVL(col, default) is Oracle's two-arg null replacement (COALESCE also works)
+      - CONNECT BY PRIOR for hierarchical / recursive queries (Oracle-specific)
+        e.g. START WITH id = 1 CONNECT BY PRIOR id = parent_id
+      - LISTAGG for string aggregation; raises error on overflow — use ON OVERFLOW TRUNCATE
+      - DUAL is a one-row dummy table: SELECT SYSDATE FROM DUAL
+      - MINUS is EXCEPT in Oracle; INTERSECT works identically
+      - Double-quote identifiers to preserve case: "MyColumn" vs MYCOLUMN
+      - Sequences + triggers for auto-increment (pre-12c); GENERATED ALWAYS AS IDENTITY (12c+)
+      - REGEXP_LIKE(col, pattern, 'i') for case-insensitive regex
+      - DATE arithmetic: DATE + 1 adds one day; DATE + 1/24 adds one hour
+      - No BOOLEAN type — use NUMBER(1) or CHAR(1) convention
+      - TO_DATE('2024-01-01', 'YYYY-MM-DD') for string-to-date conversion
+      - ROWID is the physical row address; useful for fast single-row deletes
+    custom_fns: {}
+
+  # ── 10. Apache Spark SQL ──────────────────────────────────────────────────────
+  - id: spark_sql
+    name: Apache Spark SQL
+    aliases: [spark, pyspark_sql, hive_sql, hive]
+    identifiers:
+      quote_char: '`'
+      case_sensitive: false
+      example: '`my_db`.`my_table`'
+    limit:
+      syntax: "LIMIT %n"
+      no_offset: "LIMIT %n"
+    top: ~
+    date_now: "CURRENT_TIMESTAMP()"
+    date_trunc: "DATE_TRUNC('%part', %col)"
+    date_add: "DATE_ADD(%col, %n)"   # days only in base Spark SQL
+    date_diff: "DATEDIFF(%col2, %col1)"
+    cast: "CAST(%col AS %type)"
+    string_agg: "COLLECT_LIST(%col)"
+    array_agg: "COLLECT_LIST(%col)"
+    regex_match: "RLIKE('%pattern')"
+    ilike: false
+    qualify_clause: false
+    lateral_join: "LATERAL VIEW EXPLODE(%col) tbl AS alias"
+    array_fns: [COLLECT_LIST, COLLECT_SET, EXPLODE, POSEXPLODE, ARRAY, ARRAY_CONTAINS, SIZE, SORT_ARRAY, FLATTEN]
+    window_support: true
+    cte_support: true
+    except_syntax: EXCEPT
+    schema_query: |
+      SHOW TABLES IN database_name;
+    column_query: |
+      DESCRIBE TABLE %table
+    explain_prefix: "EXPLAIN EXTENDED"
+    notes: |
+      - Hive-compatible SQL with Spark SQL extensions
+      - RLIKE for regex (Java regex syntax)
+      - LATERAL VIEW EXPLODE for array/map expansion
+      - No OFFSET — if needed, use ROW_NUMBER() workaround
+      - DATE_ADD(col, n) adds DAYS only — for months/years use add_months()
+      - COLLECT_SET for unique aggregation (like ARRAY_AGG(DISTINCT ...))
+      - Shuffle partitions: SET spark.sql.shuffle.partitions = 200 (tune for cluster)
+      - Broadcast hints: SELECT /*+ BROADCAST(small_table) */ ...
+      - CACHE TABLE for repeated queries on the same dataset
+      - Supports STRUCT, ARRAY, MAP complex types
+      - TRANSFORM ... USING for custom Python/shell UDFs
+      - Use Catalyst optimizer hints when needed: REPARTITION, COALESCE
+    custom_fns: {}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HOW TO ADD A CUSTOM DIALECT
+# ─────────────────────────────────────────────────────────────────────────────
+# Copy a dialect block above, give it a new id and name, then override
+# only the fields that differ. Example:
+#
+#  - id: oracle
+#    name: Oracle Database
+#    aliases: [oracle_sql, plsql]
+#    identifiers:
+#      quote_char: '"'
+#      case_sensitive: true
+#    limit:
+#      syntax: "FETCH FIRST %n ROWS ONLY"
+#    date_now: "SYSDATE"
+#    date_trunc: "TRUNC(%col, '%part')"
+#    ... etc
+#    notes: |
+#      - ROWNUM for legacy row limiting (pre-12c)
+#      - CONNECT BY for hierarchical queries
+#      - NVL instead of COALESCE (though COALESCE also works)
+# ─────────────────────────────────────────────────────────────────────────────
+# HOW TO ADD CUSTOM FUNCTIONS (house-style shortcuts)
+# ─────────────────────────────────────────────────────────────────────────────
+# Under any dialect, add custom_fns:
+#   custom_fns:
+#     fiscal_year: "EXTRACT(YEAR FROM DATE_ADD(%col, INTERVAL 6 MONTH))"
+#     is_active:   "status IN ('active', 'trial') AND deleted_at IS NULL"
+#     mrr:         "SUM(amount) / COUNT(DISTINCT customer_id)"
+# ─────────────────────────────────────────────────────────────────────────────

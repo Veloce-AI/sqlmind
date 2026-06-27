@@ -1,0 +1,127 @@
+# ──────────────────────────────────────────────────────────────────────────────
+#  SQLMind .gitignore
+#  github.com/VeloceAI/sqlmind
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+wheels/
+*.whl
+pip-log.txt
+pip-delete-this-directory.txt
+.eggs/
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ── uv (fast package manager) ─────────────────────────────────────────────────
+.uv/
+uv.lock
+
+# ── Environment & secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+credentials.json
+service_account.json
+
+# ── IDE & editors ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.cursor/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+nosetests.xml
+test-results.xml
+
+# ── Linting ───────────────────────────────────────────────────────────────────
+.ruff_cache/
+.mypy_cache/
+
+# ── SQLMind runtime files ─────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# User's actual schema — may contain sensitive table/column names
+schema.sqlmind.yaml
+# But keep the example schema
+!examples/schema.sqlmind.yaml
+
+# MCP server logs and session state
+mcp_*.log
+.langgraph_cache/
+langgraph.db
+
+# Generated SQL outputs
+*.generated.sql
+sql_output/
+
+# ── Notebooks ─────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+.docker/
+
+# ── Railway / deployment ──────────────────────────────────────────────────────
+.railway/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+
+# ── Internal / setup files (not for public repo) ─────────────────────────────
+CLAUDE.md
+CLAUDE_README_PROMPT.md
+README_HERO.html
+SETUP_PROMPT.md
+
+# Duplicate / source assets (hero_banner.svg and logo.svg are the canonical ones)
+docs/logo_new.svg
+docs/sqlmind_hero.svg
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.orig
+.cache/
+tmp/

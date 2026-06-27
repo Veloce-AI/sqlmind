@@ -1,0 +1,36 @@
+tables:
+  orders:
+    name: orders
+    columns:
+      - { name: id,          type: INT,       pk: true }
+      - { name: customer_id, type: INT,       fk: true, references: customers.id, indexed: true }
+      - { name: amount,      type: DECIMAL,   indexed: true }
+      - { name: status,      type: VARCHAR,   enum: [pending, confirmed, shipped, cancelled] }
+      - { name: created_at,  type: TIMESTAMP, indexed: true }
+  customers:
+    name: customers
+    columns:
+      - { name: id,     type: INT,     pk: true }
+      - { name: name,   type: VARCHAR }
+      - { name: region, type: VARCHAR, indexed: true }
+      - { name: tier,   type: VARCHAR, enum: [bronze, silver, gold] }
+  order_items:
+    name: order_items
+    columns:
+      - { name: id,         type: INT,     pk: true }
+      - { name: order_id,   type: INT,     fk: true, references: orders.id }
+      - { name: product_id, type: INT,     fk: true, references: products.id }
+      - { name: qty,        type: INT }
+      - { name: unit_price, type: DECIMAL }
+  products:
+    name: products
+    columns:
+      - { name: id,       type: INT,     pk: true }
+      - { name: sku,      type: VARCHAR, indexed: true }
+      - { name: name,     type: VARCHAR }
+      - { name: price,    type: DECIMAL }
+      - { name: category, type: VARCHAR, indexed: true }
+edges:
+  - { from_table: orders,      from_col: customer_id, to_table: customers,   to_col: id }
+  - { from_table: order_items, from_col: order_id,    to_table: orders,      to_col: id }
+  - { from_table: order_items, from_col: product_id,  to_table: products,    to_col: id }
