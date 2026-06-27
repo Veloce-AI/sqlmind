@@ -15,16 +15,13 @@ via the SDK's provider-agnostic interface.
 
 import asyncio
 import json
-import os
 import re
 import sys
 from pathlib import Path
 from typing import Optional
 
 # ── OpenAI Agents SDK ─────────────────────────────────────────────────────────
-from agents import Agent, Runner, function_tool, RunConfig
-from agents.models.openai_responses import OpenAIResponsesModel
-from openai import AsyncOpenAI
+from agents import Agent, Runner, function_tool
 
 # ── SQLMind imports ───────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
@@ -335,7 +332,7 @@ async def interactive_cli():
             break
 
         print("SQLMind: ", end="")
-        response = await run_query(user_input, stream=True)
+        await run_query(user_input, stream=True)
         print()
 
 
@@ -388,7 +385,7 @@ TABLE order_items (
     for q in questions:
         print(f"Q: {q}")
         print("A: ", end="")
-        response = await run_query(q, stream=True)
+        await run_query(q, stream=True)
         print("\n" + "─" * 60 + "\n")
 
 

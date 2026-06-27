@@ -21,14 +21,14 @@ import json
 import argparse
 import re
 from typing import Optional
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 import sys
 
 # Make sqlmind_graph importable when server is run from any directory
 sys.path.insert(0, str(Path(__file__).parent))
 
-from sqlmind_graph import SchemaGraph, DialectRegistry
+from sqlmind_graph import SchemaGraph
 
 try:
     import sqlglot
@@ -261,7 +261,6 @@ def sqlmind_validate(
     phases_found = []
     
     sql_upper = sql.upper()
-    sql_lower = sql.lower()
     
     # ── Phase detection ──
     clause_order = [

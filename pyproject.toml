@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sqlmind"
 version = "0.1.0"
-description = "SQL intelligence layer for LLM agents — phase-locked generation, property graph schema, 9-dialect support"
+description = "SQL intelligence layer for LLM agents — phase-locked generation, property graph schema, 10-dialect support"
 authors = [{ name = "VeloceAI", email = "veloceai369@gmail.com" }]
 license = { text = "MIT" }
 readme = "README.md"
@@ -38,6 +38,14 @@ sqlmind = "sqlmind_graph:main"
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+    "E401",   # multiple imports on one line (test files use `import pytest, sys`)
+    "E701",   # multiple statements on one line — colon (intentional in tests)
+    "E702",   # multiple statements on one line — semicolon
+    "E402",   # module level import not at top (needed after sys.path.insert in integrations)
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

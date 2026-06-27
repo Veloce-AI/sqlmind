@@ -182,7 +182,7 @@ When generating SQL:
         Requires: pip install sqlalchemy
         """
         try:
-            from sqlalchemy import create_engine, inspect, text
+            from sqlalchemy import create_engine, inspect
         except ImportError:
             raise ImportError("pip install sqlalchemy")
         
